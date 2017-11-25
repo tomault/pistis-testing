@@ -252,6 +252,42 @@ namespace pistis {
 		      "Const and mutable iterators do not belong to the same category");
       }
 
+      template <typename SimpleIterator, typename Sequence>
+      void testSimpleIteratorPreincrement(SimpleIterator it,
+					  const Sequence& truth) {
+	auto i = truth.begin();
+	while (it) {
+	  ASSERT_NE(i, truth.end());
+	  ASSERT_EQ(*i, *it);
+	  ++it; ++i;
+	}
+	ASSERT_EQ(i, truth.end());
+      }
+
+      template <typename SimpleIterator, typename Sequence>
+      void testSimpleIteratorPostincrement(SimpleIterator it,
+					   const Sequence& truth) {
+	auto i = truth.begin();
+	while (it) {
+	  ASSERT_NE(i, truth.end());
+	  ASSERT_EQ(*i, *it++);
+	  ++i;
+	}
+	ASSERT_EQ(i, truth.end());
+      }
+
+      template <typename SimpleIterator, typename Sequence>
+      void testWriteThroughSimpleIterator(SimpleIterator it,
+					  const Sequence& truth) {
+	for (auto x : truth) {
+	  ASSERT_TRUE(bool(it));
+	  *it = x;
+	  ASSERT_EQ(x, *it);
+	  ++it;
+	}
+	ASSERT_FALSE(bool(it));
+      }
+
       template <typename StartIteratorFactory,
 		typename EndIteratorFactory,
 		typename Sequence>
@@ -383,6 +419,31 @@ namespace pistis {
 							mutableIteratorFactory());
       }
 
+      template <typename SimpleIteratorFactory,
+		typename Sequence>
+      void testSimpleIterator(SimpleIteratorFactory createSimpleIterator,
+			      const Sequence& truth) {
+	SCOPED_TRACE("testSimpleIterator");
+	testCopyConstruction(createSimpleIterator());
+	testCopyAssignment(createSimpleIterator());
+	testDereferenceAndRead(createSimpleIterator(), *truth.begin());
+	testEqualityOp(createSimpleIterator(), createSimpleIterator(),
+		       ++createSimpleIterator());
+	testInequalityOp(++createSimpleIterator(), ++createSimpleIterator(),
+			 createSimpleIterator());
+
+	testSimpleIteratorPreincrement(createSimpleIterator(), truth);
+	testSimpleIteratorPostincrement(createSimpleIterator(), truth);
+      }
+
+      template <typename SimpleIteratorFactory,
+		typename Sequence>
+      void testMutableSimpleIterator(SimpleIteratorFactory createSimpleIterator,
+				     const Sequence& truth,
+				     const Sequence& valuesToWrite) {
+	testSimpleIterator(createSimpleIterator, truth);
+	testWriteThroughSimpleIterator(createSimpleIterator(), valuesToWrite);
+      }
       
     }
   }

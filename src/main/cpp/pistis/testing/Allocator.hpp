@@ -14,6 +14,10 @@ namespace pistis {
     template <typename T>
     class Allocator : public std::allocator<T> {
     public:
+      template <typename U>
+      struct rebind { typedef Allocator<U> other; };
+      
+    public:
       Allocator() :
 	  std::allocator<T>(), name_(), movedFrom_(false), movedInto_(false) {
       }
