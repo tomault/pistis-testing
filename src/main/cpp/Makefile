@@ -59,14 +59,13 @@ dirs: ${OUTPUT_DIRS} ${OBJ_SUBDIRS}
 
 compile: dirs ${OBJ_FILES}
 
-#link: compile ${TARGET_DIR}/lib/${LIBRARY}
-link: compile
+link: compile ${TARGET_DIR}/lib/${LIBRARY}
 
 install:
 	-[[ -d ${REPO_DIR}/include/pistis/testing ]] && rm -rf ${REPO_DIR}/include/pistis/testing
 	for d in ${SRC_DIRS}; do ([[ -d ${REPO_DIR}/include/$${d} ]] || mkdir -p ${REPO_DIR}/include/$${d}); cp $${d}/*.hpp ${REPO_DIR}/include/$${d}/.; done
-#	cp ${TARGET_DIR}/lib/${LIBRARY} ${REPO_LIB_DIR}/.
-#	cd ${REPO_LIB_DIR} && ln -sf ${LIBRARY} ${SONAME} && ln -sf ${LIBRARY} lib${LIBRARY_NAME}.so
+	cp ${TARGET_DIR}/lib/${LIBRARY} ${REPO_LIB_DIR}/.
+	cd ${REPO_LIB_DIR} && ln -sf ${LIBRARY} ${SONAME} && ln -sf ${LIBRARY} lib${LIBRARY_NAME}.so
 
 clean:
 	-rm -rf ${TARGET_DIR}/obj
