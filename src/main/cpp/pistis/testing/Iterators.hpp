@@ -341,7 +341,7 @@ namespace pistis {
 				      EndIteratorFactory createIteratorAtEnd,
 				      const Sequence& truth,
 				      const SequenceValue& valueToWrite) {
-	testForwardIterator(createIteratorAtStart. createIteratorAtEnd, truth);
+	testForwardIterator(createIteratorAtStart, createIteratorAtEnd, truth);
 	SCOPED_TRACE("testMutableForwardIterator");
 	testDereferenceAndWrite(createIteratorAtStart(), valueToWrite);
       }
